@@ -56,6 +56,7 @@ public class ClipThreeParkSometimes extends LinearOpMode {
         robot.tweetyBird.engage();
         robot.tweetyBird.skipWaypoint();
         waitForMove();
+
         moveTo(-6,18,0); //Move back from submersible
         moveTo(-6,18,0); //Move back from submersible
         moveTo(-6,18,0); //Move back from submersible
