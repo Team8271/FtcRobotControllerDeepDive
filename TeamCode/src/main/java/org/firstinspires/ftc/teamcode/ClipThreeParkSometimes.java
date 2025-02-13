@@ -40,7 +40,7 @@ public class ClipThreeParkSometimes extends LinearOpMode {
         ///Clip preload
         robot.tweetyBird.engage();
         moveTo(-6,29,0);
-        waitForMove();
+        robot.tweetyBird.waitWhileBusy();
         robot.tweetyBird.clearWaypoints();
         robot.tweetyBird.skipWaypoint();
         robot.tweetyBird.disengage();
@@ -55,7 +55,7 @@ public class ClipThreeParkSometimes extends LinearOpMode {
         ///Pushing samples into observation
         robot.tweetyBird.engage();
         robot.tweetyBird.skipWaypoint();
-        waitForMove();
+        robot.tweetyBird.waitWhileBusy();
 
         moveTo(-6,18,0); //Move back from submersible
         moveTo(-6,18,0); //Move back from submersible
@@ -65,22 +65,22 @@ public class ClipThreeParkSometimes extends LinearOpMode {
         moveTo(28,18,-180); //Move to left/below sample 1
         moveTo(28,18,-180); //Move to left/below sample 1
 
-        waitForMove();
+        robot.tweetyBird.waitWhileBusy();
         moveTo(29,42,-180); //Move to left/above sample 1
         moveTo(29,42,-180); //Move to left/above sample 1
         moveTo(29,42,-180); //Move to left/above sample 1
 
-        waitForMove();
+        robot.tweetyBird.waitWhileBusy();
         moveTo(40,42,-180); //Move to above sample 1
         moveTo(40,42,-180); //Move to above sample 1
         moveTo(40,42,-180); //Move to above sample 1
 
-        waitForMove();
+        robot.tweetyBird.waitWhileBusy();
         moveTo(37,11,-180); //Push sample 1 into observation
         moveTo(37,11,-180); //Push sample 1 into observation
         moveTo(37,11,-180); //Push sample 1 into observation
 
-        waitForMove();
+        robot.tweetyBird.waitWhileBusy();
         robot.tweetyBird.clearWaypoints();
         robot.tweetyBird.skipWaypoint();
         robot.tweetyBird.disengage();
@@ -102,10 +102,10 @@ public class ClipThreeParkSometimes extends LinearOpMode {
         telemetry.update();
 
         moveTo(34,15,-180); //Back out of observation
-        waitForMove(); //Added to prevent backing into other team observation?? Might work
+        robot.tweetyBird.waitWhileBusy(); //Added to prevent backing into other team observation?? Might work
         setSlidePosition(robot.vertSlide, robot.aboveChamber,0.4);
         moveTo(-10,15,0); //Rotate and move to submersible
-        waitForMove();
+        robot.tweetyBird.waitWhileBusy();
         robot.tweetyBird.clearWaypoints();
         robot.tweetyBird.skipWaypoint();
         robot.tweetyBird.disengage();
@@ -119,10 +119,10 @@ public class ClipThreeParkSometimes extends LinearOpMode {
         robot.tweetyBird.engage();
         robot.tweetyBird.skipWaypoint();
         moveTo(-10,25,0); //Back off of submersible
-        waitForMove();
+        robot.tweetyBird.waitWhileBusy();
         setSlidePosition(robot.vertSlide, robot.wallHeight, 0.3);
         moveTo(33,0,0); //Move to observation with no rotation
-        waitForMove();
+        robot.tweetyBird.waitWhileBusy();
         robot.tweetyBird.clearWaypoints();
         robot.tweetyBird.skipWaypoint();
         robot.tweetyBird.disengage();
@@ -154,10 +154,10 @@ public class ClipThreeParkSometimes extends LinearOpMode {
         telemetry.update();
 
         moveTo(34,15,-180); //Back out of observation
-        waitForMove(); //Added to prevent backing into other team observation?? Might work
+        robot.tweetyBird.waitWhileBusy(); //Added to prevent backing into other team observation?? Might work
         setSlidePosition(robot.vertSlide, robot.aboveChamber,0.4);
         moveTo(-8+offset,15,0); //Rotate and move to submersible
-        waitForMove();
+        robot.tweetyBird.waitWhileBusy();
         robot.tweetyBird.clearWaypoints();
         robot.tweetyBird.skipWaypoint();
         robot.tweetyBird.disengage();
@@ -171,10 +171,10 @@ public class ClipThreeParkSometimes extends LinearOpMode {
         robot.tweetyBird.engage();
         robot.tweetyBird.skipWaypoint();
         moveTo(-8,25,0); //Back off of submersible
-        waitForMove();
+        robot.tweetyBird.waitWhileBusy();
         setSlidePosition(robot.vertSlide, robot.wallHeight, 0.3);
         moveTo(33,0,-180); //Move to observation with rotation
-        waitForMove();
+        robot.tweetyBird.waitWhileBusy();
         robot.tweetyBird.clearWaypoints();
         robot.tweetyBird.skipWaypoint();
         robot.tweetyBird.disengage();
@@ -187,9 +187,6 @@ public class ClipThreeParkSometimes extends LinearOpMode {
     public void closeClaw(){
         robot.closeClaw();
         sleep(500);
-    }
-    public void waitForMove(){
-        robot.tweetyBird.waitWhileBusy();
     }
     public void moveTo(double x, double y, double z){
         robot.tweetyBird.addWaypoint(x,y,z);
