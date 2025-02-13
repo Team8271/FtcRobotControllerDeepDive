@@ -41,9 +41,9 @@ public class Runtime extends Thread {
       while (!Thread.currentThread().isInterrupted()) {
         loop();
       }
-      tweetyBird.close();
+      //Cut TweetyClose from here
     }
-
+    tweetyBird.close(); //Moved so it happens at the end of run
   }
 
   /**
