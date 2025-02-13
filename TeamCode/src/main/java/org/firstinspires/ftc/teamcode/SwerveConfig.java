@@ -5,11 +5,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import dev.narlyx.tweetybird.Odometers.ThreeWheeled;
+
 public class SwerveConfig {
     private final LinearOpMode opMode;
     
     public DcMotor flMotor,frMotor,blMotor,brMotor;
     public Servo flServo,frServo,blServo,brServo;
+    public ThreeWheeled odometer;
 
     public SwerveConfig(LinearOpMode opMode){this.opMode = opMode;}
 
@@ -39,5 +42,24 @@ public class SwerveConfig {
         frServo = hwMap.get(Servo.class, "FRServo");
         blServo = hwMap.get(Servo.class, "BLServo");
         brServo = hwMap.get(Servo.class, "BRServo");
+
+        odometer = new ThreeWheeled.Builder()
+                .setLeftEncoder(blMotor)
+                .setRightEncoder(frMotor)
+                .setMiddleEncoder(brMotor)
+
+                .setEncoderTicksPerRotation(2000)
+                .setEncoderWheelRadius(0.944882)
+
+                //Change the true/false values to correct directions
+                .setFlipLeftEncoder(true)
+                .setFlipRightEncoder(true)
+                .setFlipMiddleEncoder(true)
+
+                .setSideEncoderDistance(12)
+                .setMiddleEncoderOffset(9.75)
+                .build();
+
+        odometer.resetTo(0,0,0);
     }
 }

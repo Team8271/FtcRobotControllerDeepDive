@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="SwerveTeleOp")
 public class SwerveTeleOp extends LinearOpMode {
@@ -22,6 +23,17 @@ public class SwerveTeleOp extends LinearOpMode {
 
       //Need to set servo position based on joysticks
       //Power also needs to be set through joysticks / throttle
+
+      double gamepadRadians = Math.atan2(lateralControl, axialControl);
+      double gamepadHypot = Range.clip(Math.hypot(lateralControl, axialControl), 0, 1);
+      double robotRadians = -robot.odometer.getZ();
+      double targetRadians = gamepadRadians + robotRadians;
+      double lateral = Math.sin(targetRadians)*gamepadHypot;
+      double axial = Math.cos(targetRadians)*gamepadHypot;
+
+      telemetry.addLine("Lateral: " + Math.round(lateral*100)/100);
+      telemetry.addLine("Axial:   " + Math.round(axial*100)/100);
+      telemetry.update();
     }
   }
 }
