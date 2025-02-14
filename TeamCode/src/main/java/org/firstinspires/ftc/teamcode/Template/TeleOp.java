@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode.Template;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Template TeleOp")
 public class TeleOp extends LinearOpMode {
     Configuration robot;
 
@@ -13,16 +14,23 @@ public class TeleOp extends LinearOpMode {
         robot = new Configuration(this);
         robot.init();
         robot.initTweetyBird();
+        ElapsedTime runTime = new ElapsedTime();
 
         waitForStart(); //Wait for Start
 
         Driver1 driverOne = new Driver1(this,robot);
         Driver2 driverTwo = new Driver2(this,robot);
 
+
         while(opModeIsActive()){
-            telemetry.addLine("Thread One Status: " + driverOne.isAlive());
+            int threadsRunning = Driver1.activeCount() + Driver2.activeCount();
+
+            ///Telemetry
+            telemetry.addLine("RunTime: " + runTime.toString());
+            telemetry.addLine("Threads Running: " + threadsRunning);
+            telemetry.addLine("Robot Position: " + Math.round(robot.odometer.getX()) + ", " + Math.round(robot.odometer.getY()) + ", " + Math.round(robot.odometer.getZ()));
             telemetry.update();
-            sleep(400);
+            sleep(500);
         }
     }
 }
@@ -53,7 +61,7 @@ class Driver1 extends Thread{
                 robot.odometer.resetTo(0,0,0);
             }
 
-            ///DriveTrain Start
+            ///Mecanum DriveTrain Start
             double gamepadRadians = Math.atan2(lateralControl, axialControl);
             double gamepadHypot = Range.clip(Math.hypot(lateralControl, axialControl), 0, 1);
             double robotRadians = -robot.odometer.getZ();
@@ -83,15 +91,18 @@ class Driver2 extends Thread{
     private final LinearOpMode opMode;
     private final Configuration robot;
 
-    public Driver2(LinearOpMode opMode, Configuration robot){
-        this.opMode = opMode;
-        this.robot = robot;
-    }
+    public Driver2(LinearOpMode opMode, Configuration robot){this.opMode = opMode;this.robot = robot;}
 
     @Override
     public void run(){
         while(opMode.opModeIsActive()){
             //Put Driver 2 Specific Stuff Here
+            ///Driver Controls
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
