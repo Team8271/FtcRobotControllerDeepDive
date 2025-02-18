@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.SwerveDev;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="SwerveTeleOp")
@@ -50,4 +51,18 @@ public class SwerveTeleOp extends LinearOpMode {
 
     }
   }
+
+  //Method to set Servo position to desired position with minimal rotation
+  public void setServoPosition(Servo servo, int position){
+    //If the distance to position is best achieved by 0-180 range (rather than 180-360)
+    if(Math.abs(servo.getPosition()-position) <= Math.abs(servo.getPosition()-***)){
+
+    }
+  }
+
+  //Method to get opposite rotation of servo so that the wheel still faces same direction (90 - 270)
+  public int degreeOpposite(int degree){
+    
+  }
+
 }
