@@ -11,7 +11,7 @@ public class SwerveConfig {
     private final LinearOpMode opMode;
     
     public DcMotor flMotor,frMotor,blMotor,brMotor;
-    public Servo flServo,frServo,blServo,brServo;
+    public Servo flServo,frServo,blServo,brServo,testServo;
     public ThreeWheeled odometer;
 
     public SwerveConfig(LinearOpMode opMode){this.opMode = opMode;}
@@ -42,6 +42,8 @@ public class SwerveConfig {
         //frServo = hwMap.get(Servo.class, "FRServo");
         //blServo = hwMap.get(Servo.class, "BLServo");
         //brServo = hwMap.get(Servo.class, "BRServo");
+        testServo = hwMap.get(Servo.class, "BoxServo");
+
 
         odometer = new ThreeWheeled.Builder()
                 .setLeftEncoder(blMotor)

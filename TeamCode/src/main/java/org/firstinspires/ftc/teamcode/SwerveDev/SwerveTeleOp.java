@@ -35,17 +35,22 @@ public class SwerveTeleOp extends LinearOpMode {
        * add rotation with yaw control
        */
 
-      
+
+
+
+
+
+
       //If servo position is set at 200 starting at 0
       //It should go to 20 ticks
 
       //Tell it to go to 200
-      if(gamepad1.dpadUp){
+      if(gamepad1.dpad_up){
         setServoPosition(robot.testServo, 200);
       }
 
       //Tell it to go to 0
-      if(gamepad1.dpadRight){
+      if(gamepad1.dpad_down){
         setServoPosition(robot.testServo, 200);
       }
       
@@ -58,19 +63,25 @@ public class SwerveTeleOp extends LinearOpMode {
     }
   }
 
+  //Called per loop to set Servo Positioning based on lateral, axial, and yaw values
+  public void servoDrive(double lateral, double axial, double yaw){
+    
+  }
+
+
   //Method to set Servo position to desired position with minimal rotation
   public void setServoPosition(Servo servo, int position){
-    //If degree inputed is closer than the opposite of that degree 
-    if(Math.abs(servo.getPosition()-position) <= Math.abs(servo.getPosition()-degreeOpposite(position)){
+    //If degree inputted is closer than the opposite of that degree
+    if(Math.abs(servo.getPosition()-position) <= Math.abs(servo.getPosition()-degreeOpposite(position))){
       servo.setPosition(position);
     }
     //If Opposite degree is closer
     else{
-      servo.setPosition(degreeOpposite(position);
+      servo.setPosition(degreeOpposite(position));
     }
   }
 
-  //Method for opposite rottion of a Servo ie(90 & 270 keep wheel facing same direction)
+  //Method for opposite rotation of a Servo ie(90 & 270 keep wheel facing same direction)
   public int degreeOpposite(int degree){
     //For a positive int
     if(degree >= 0){
