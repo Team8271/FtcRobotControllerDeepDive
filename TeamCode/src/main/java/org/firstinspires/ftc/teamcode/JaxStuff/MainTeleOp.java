@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.JaxStuff;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.util.Range;
 
 //Set intake motor to auto run when intake is down unless reverse intake
 
+@Disabled //REMOVE THIS LINE
 @TeleOp(name="Main TeleOp")
 public class MainTeleOp extends LinearOpMode {
     @Override

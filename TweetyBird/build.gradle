@@ -34,7 +34,7 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
     }
   }
-  compileOptions {
+    compileOptions {
     sourceCompatibility JavaVersion.VERSION_11
     targetCompatibility JavaVersion.VERSION_11
   }
@@ -56,7 +56,9 @@ mavenPublishing {
   publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 
   signAllPublications()
-  coordinates("dev.narlyx", "tweetybird", "0.19893242.1")
+
+  coordinates("dev.narlyx", "tweetybird", "5.6.1")
+
 
   pom {
     name = "TweetyBird"

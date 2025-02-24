@@ -1,13 +1,15 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.JaxStuff;
 
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+@Disabled //REMOVE THIS LINE
 @Autonomous(name="Clip Three Park Dev")
 public class ClipThreeParkDev extends LinearOpMode {
     public ElapsedTime runTime;

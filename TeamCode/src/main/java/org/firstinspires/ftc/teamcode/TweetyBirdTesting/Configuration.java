@@ -1,11 +1,9 @@
-package org.firstinspires.ftc.teamcode.Template;
+package org.firstinspires.ftc.teamcode.TweetyBirdTesting;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import dev.narlyx.tweetybird.Drivers.Mecanum;
 import dev.narlyx.tweetybird.Odometers.ThreeWheeled;
@@ -18,20 +16,15 @@ public class Configuration {
     ///Defining parts of robot
     //Define DcMotors
     public DcMotor fl,fr,bl,br;
-    //Define Servos
-    public Servo exampleServo;
-    //Define TouchSensors
-    public TouchSensor exampleSensor;
 
-    ///Defining TweetyBird Stuff
+    ///Defining TweetyBird things
     public ThreeWheeled odometer;
     public Mecanum mecanum;
     public TweetyBird tweetyBird;
 
     ///Quick Change Values
-    public final double
-            exampleServoMax = 5,
-            exampleServoMin = 0;
+    public double maxSpeed = 0.5,
+                  minSpeed = 0.3;
 
 
     ///Robot Initialization Sequence
@@ -65,10 +58,6 @@ public class Configuration {
         br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);  //Set Brake Mode
 
 
-        ///Define Servos
-        exampleServo = hwMap.get(Servo.class,"exampleServo");
-
-        ///If you don't have a mecanum drive you may need to make your own driver
         mecanum = new Mecanum.Builder()
                 .setFrontLeftMotor(fl)
                 .setFrontRightMotor(fr)
@@ -106,11 +95,11 @@ public class Configuration {
                 .setDistanceBuffer(1) //inches
                 .setDriver(mecanum)
                 .setLinearOpMode(opMode)
-                .setMaximumSpeed(0.7)
-                .setMinimumSpeed(0.4)
+                .setMaximumSpeed(maxSpeed)
+                .setMinimumSpeed(minSpeed)
                 .setOdometer(odometer)
-                .setRotationBuffer(4)
-                .setDebuggingEnabled(false)
+                .setRotationBuffer(3)
+                .setLoggingEnabled(true)
                 .build();
 
         opMode.telemetry.addLine("TweetyBird Initialization Completed!");

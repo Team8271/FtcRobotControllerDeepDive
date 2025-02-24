@@ -1,21 +1,21 @@
-package org.firstinspires.ftc.teamcode.Template;
+package org.firstinspires.ftc.teamcode.TweetyBirdTesting;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
+
 /**
  * A TeleOp program that utilises separate threads for each driver.
  */
-@Disabled //REMOVE THIS LINE
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Template TeleOp")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOp")
 public class TeleOp extends LinearOpMode {
-    Configuration robot;
+    org.firstinspires.ftc.teamcode.Template.Configuration robot;
 
     @Override
     public void runOpMode(){
         //Initialization Start
-        robot = new Configuration(this);
+        robot = new org.firstinspires.ftc.teamcode.Template.Configuration(this);
         robot.init();
         robot.initTweetyBird();
         ElapsedTime runTime = new ElapsedTime();
@@ -23,11 +23,13 @@ public class TeleOp extends LinearOpMode {
         waitForStart(); //Wait for Start
 
         Driver1 driverOne = new Driver1(this,robot);
-        Driver2 driverTwo = new Driver2(this,robot);
+
+        //Starting Threads
+        driverOne.start();
 
 
         while(opModeIsActive()){
-            int threadsRunning = Driver1.activeCount() + Driver2.activeCount();
+            int threadsRunning = Driver1.activeCount();
 
             ///Telemetry
             telemetry.addLine("RunTime: " + runTime.toString());
@@ -45,9 +47,9 @@ public class TeleOp extends LinearOpMode {
 //Driver1 thread1 = new Driver1(this, robot);
 class Driver1 extends Thread{
     private final LinearOpMode opMode;
-    private final Configuration robot;
+    private final org.firstinspires.ftc.teamcode.Template.Configuration robot;
 
-    public Driver1(LinearOpMode opMode, Configuration robot){
+    public Driver1(LinearOpMode opMode, org.firstinspires.ftc.teamcode.Template.Configuration robot){
         this.opMode = opMode;
         this.robot = robot;
     }
@@ -86,31 +88,6 @@ class Driver1 extends Thread{
             robot.fr.setPower(rightFrontPower * mainThrottle);
             robot.bl.setPower(leftBackPower * mainThrottle);
             robot.br.setPower(rightBackPower * mainThrottle);
-        }
-    }
-}
-
-
-/**
- * A thread that takes input from controller two and controls additional motors/servos.
- */
-//Driver2 thread2 = new Driver2(this, robot);
-class Driver2 extends Thread{
-    private final LinearOpMode opMode;
-    private final Configuration robot;
-
-    public Driver2(LinearOpMode opMode, Configuration robot){this.opMode = opMode;this.robot = robot;}
-
-    @Override
-    public void run(){
-        while(opMode.opModeIsActive()){
-            //Put Driver 2 Specific Stuff Here
-            ///Driver Controls
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
         }
     }
 }

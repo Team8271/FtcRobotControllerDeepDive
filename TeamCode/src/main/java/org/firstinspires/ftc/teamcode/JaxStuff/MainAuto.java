@@ -1,17 +1,17 @@
-///This is the old Secondary TeleOp before hotel night edit
-
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.JaxStuff;
 
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="Clip Three Park Sometimes")
-public class ClipThreeParkSometimes extends LinearOpMode {
+@Disabled //REMOVE THIS LINE
+@Autonomous(name="Main Auto (Clip Three)", preselectTeleOp = "Main TeleOp")
+public class MainAuto extends LinearOpMode {
     public ElapsedTime runTime;
     Config robot;
     @Override
@@ -54,14 +54,28 @@ public class ClipThreeParkSometimes extends LinearOpMode {
         ///Pushing samples into observation
         robot.tweetyBird.engage();
         waitForMove();
-        moveTo(-6,18,0); //Move back from submersible
-        moveTo(28,18,-180); //Move to left/below sample 1
+        moveTo(-6,21,0); //Move back from submersible
+        moveTo(28,22,0); //Move to left/below sample 1
         waitForMove();
-        moveTo(29,42,-180); //Move to left/above sample 1
+        moveTo(29,49,0); //Move to left/above sample 1
         waitForMove();
-        moveTo(40,42,-180); //Move to above sample 1
+        moveTo(40,50,0); //Move to above sample 1
         waitForMove();
-        moveTo(37,11,-180); //Push sample 1 into observation
+        moveTo(37,11,0); //Push sample 1 into observation
+        /*Push 2nd
+        moveTo(40,50,0); //Move left/above sample 2
+        waitForMove();
+        moveTo(49,50,0); //Move above sample 2
+        waitForMove();
+        moveTo(46,11,0); //Push sample 2 into observation
+*/
+
+        ///Grab and 2nd specimen
+        moveTo(34,18,0); //Exit observation
+        waitForMove();
+        moveTo(34,16,-180); //Rotate 180
+        waitForMove();
+        moveTo(34,0,-180);
         waitForMove();
         robot.tweetyBird.clearWaypoints();
         robot.tweetyBird.disengage();
@@ -72,56 +86,13 @@ public class ClipThreeParkSometimes extends LinearOpMode {
 
         //flies backward
         clipCycle(0); //2nd
-        //clipCycle(-2); //3rd
-        //clipCycle(-4); //4th
+        clipCycle(-2); //3rd
+        clipCycle(-4); //4th
         //clipCycle(-6); //5th
-
-        //Sitting in observation and grabbed specimen
-        robot.tweetyBird.engage();
-        telemetry.addLine(robot.odometer.getX() + ", " + robot.odometer.getY() + ", " + robot.odometer.getZ());
-        telemetry.update();
-
-        moveTo(34,15,-180); //Back out of observation
-        waitForMove(); //Added to prevent backing into other team observation?? Might work
-        setSlidePosition(robot.vertSlide, robot.aboveChamber,0.4);
-        moveTo(-10,15,0); //Rotate and move to submersible
-        waitForMove();
-        robot.tweetyBird.clearWaypoints();
-        robot.tweetyBird.disengage();
-        moveUntilSensor(robot.frontTouch, 0.4);
-        setSlidePosition(robot.vertSlide, robot.belowChamber,0.4);
-        sleep(1000);
-        robot.openClaw(); //Open the claw
-
-
-        //Robot is sitting against submersible with specimen clipped and claw open
-        robot.tweetyBird.engage();
-        moveTo(-10,25,0); //Back off of submersible
-        waitForMove();
-        setSlidePosition(robot.vertSlide, robot.wallHeight, 0.3);
-        moveTo(33,0,0); //Move to observation with no rotation
-        waitForMove();
-        robot.tweetyBird.clearWaypoints();
-        robot.tweetyBird.disengage();
-
 
 
         robot.tweetyBird.close();
     }
-    //Stupid work around for tweety skipping waypoints
-    public void tweetyBirdMoveTo(double x, double y, double z){
-        robot.tweetyBird.addWaypoint(x,y,z);
-        double targetX = robot.tweetyBird.getCurrentWaypoint().getX();
-        double targetY = robot.tweetyBird.getCurrentWaypoint().getY();
-        double targetZ = robot.tweetyBird.getCurrentWaypoint().getZ();
-        sleep(100); //Wait for tweety a second
-        //If tweetyBird is ignoring me try to fix it
-        if(targetX != x || targetY != y || targetZ != z){ //Target ain't target
-            robot.tweetyBird.clearWaypoints();
-            tweetyBirdMoveTo(x,y,z); //Try again
-        }
-    }
-
     //Start in position after grabbing clip
     public void clipCycle(double offset){
         //Sitting in observation and grabbed specimen
@@ -137,7 +108,7 @@ public class ClipThreeParkSometimes extends LinearOpMode {
         robot.tweetyBird.clearWaypoints();
         robot.tweetyBird.disengage();
         moveUntilSensor(robot.frontTouch, 0.4);
-        setSlidePosition(robot.vertSlide, robot.belowChamber,0.4);
+        setSlidePosition(robot.vertSlide, robot.belowChamber,0.3);
         sleep(1000);
         robot.openClaw(); //Open the claw
 
@@ -153,8 +124,7 @@ public class ClipThreeParkSometimes extends LinearOpMode {
         robot.tweetyBird.disengage();
         moveUntilSensor(robot.topTouch, 0.4);
         closeClaw(); //Grab specimen
-        setSlidePosition(robot.vertSlide, robot.wallHeight+500,0.8);
-        sleep(500);
+        setSlidePosition(robot.vertSlide, robot.wallHeight+400,0.4);
     }
 
     public void closeClaw(){
@@ -167,7 +137,7 @@ public class ClipThreeParkSometimes extends LinearOpMode {
     public void moveTo(double x, double y, double z){
         robot.tweetyBird.addWaypoint(x,y,z);
     }
-    public void setSlidePosition(@NonNull DcMotor slide, int target, double power){
+    public void setSlidePosition(DcMotor slide, int target, double power){
         slide.setTargetPosition(target);
         if(slide.getMode() != DcMotor.RunMode.RUN_TO_POSITION){
             slide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
