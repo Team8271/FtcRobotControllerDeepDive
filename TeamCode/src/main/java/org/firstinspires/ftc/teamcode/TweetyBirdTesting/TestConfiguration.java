@@ -9,9 +9,9 @@ import dev.narlyx.tweetybird.Drivers.Mecanum;
 import dev.narlyx.tweetybird.Odometers.ThreeWheeled;
 import dev.narlyx.tweetybird.TweetyBird;
 
-public class Configuration {
+public class TestConfiguration {
     private final LinearOpMode opMode;
-    public Configuration(LinearOpMode opMode){this.opMode = opMode;}
+    public TestConfiguration(LinearOpMode opMode){this.opMode = opMode;}
 
     ///Defining parts of robot
     //Define DcMotors
