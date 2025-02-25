@@ -10,14 +10,13 @@ import com.qualcomm.robotcore.util.Range;
 @Disabled //REMOVE THIS LINE
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Template TeleOp")
 public class TeleOp extends LinearOpMode {
-    Configuration robot;
+    public Configuration robot;
 
     @Override
     public void runOpMode(){
         //Initialization Start
         robot = new Configuration(this);
         robot.init();
-        robot.initTweetyBird();
         ElapsedTime runTime = new ElapsedTime();
 
         waitForStart(); //Wait for Start
@@ -45,12 +44,9 @@ public class TeleOp extends LinearOpMode {
 //Driver1 thread1 = new Driver1(this, robot);
 class Driver1 extends Thread{
     private final LinearOpMode opMode;
-    private final Configuration robot;
+    Configuration robot;
 
-    public Driver1(LinearOpMode opMode, Configuration robot){
-        this.opMode = opMode;
-        this.robot = robot;
-    }
+    public Driver1(LinearOpMode opMode, Configuration robotConfig){this.opMode = opMode;robot = robotConfig;}
 
     @Override
     public void run(){
@@ -99,7 +95,7 @@ class Driver2 extends Thread{
     private final LinearOpMode opMode;
     private final Configuration robot;
 
-    public Driver2(LinearOpMode opMode, Configuration robot){this.opMode = opMode;this.robot = robot;}
+    public Driver2(LinearOpMode opMode, Configuration robotConfig){this.opMode = opMode;robot = robotConfig;}
 
     @Override
     public void run(){

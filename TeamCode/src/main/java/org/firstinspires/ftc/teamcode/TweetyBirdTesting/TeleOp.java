@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TweetyBirdTesting;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -17,16 +18,14 @@ public class TeleOp extends LinearOpMode {
         //Initialization Start
         robot = new TestConfiguration(this);
         robot.init();
-        robot.initTweetyBird();
         ElapsedTime runTime = new ElapsedTime();
 
+        robot.fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         waitForStart(); //Wait for Start
-
-        //Driver1 driverOne = new Driver1(this,robot);
-
-        //Starting Threads
-        //driverOne.start();
-
 
         while(opModeIsActive()){
             ///Driver Controls
@@ -35,6 +34,8 @@ public class TeleOp extends LinearOpMode {
             double yawControl = gamepad1.right_stick_x;
             double mainThrottle = .2+(gamepad1.right_trigger*0.8);
             boolean resetFCD = gamepad1.dpad_up;
+
+            telemetry.addLine(axialControl + ", " + lateralControl + ", " + yawControl);
 
             //FCD Reset
             if(resetFCD){
@@ -55,11 +56,16 @@ public class TeleOp extends LinearOpMode {
             double leftBackPower = axial - lateral + yawControl;
             double rightBackPower = axial + lateral - yawControl;
 
+            telemetry.addLine(leftFrontPower + ", " + rightFrontPower + ", " +
+                    leftBackPower + ", " + rightBackPower);
+
             //Send Power
             robot.fl.setPower(leftFrontPower * mainThrottle);
             robot.fr.setPower(rightFrontPower * mainThrottle);
             robot.bl.setPower(leftBackPower * mainThrottle);
             robot.br.setPower(rightBackPower * mainThrottle);
+
+
 
 
 

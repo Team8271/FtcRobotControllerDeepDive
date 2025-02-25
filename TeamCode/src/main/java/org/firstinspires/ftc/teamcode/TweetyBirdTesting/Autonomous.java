@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TweetyBirdTesting;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.*;
 
@@ -9,74 +10,109 @@ import java.util.*;
 public class Autonomous extends LinearOpMode {
     TestConfiguration robot;
     int currentSelection = 0;
+    ElapsedTime runtime;
 
-    //Make a hashmap and grab value for key 0-1
+    //Make a hashmap and grab value for key 1-2
     //noinspection MismatchedQueryAndUpdateOfCollection
     HashMap<Integer, String> autoPrograms = new HashMap<Integer, String>();
 
 
     @Override
     public void runOpMode(){
-        //Allow telemetry from initializations to pile up
-        telemetry.setAutoClear(false);
-        boolean debounce = true;
+        initialize();
+        autoSelector();
 
+        waitForStart();
+        telemetry.setAutoClear(true);
+
+        //Run auto based on selection
+        if(currentSelection == 0){
+            telemetry.addLine("Running selection 0");
+            telemetry.update();
+            aroundTheFieldAuto();
+        }
+        if(currentSelection == 1){
+            telemetry.addLine("Running selection 0");
+            telemetry.update();
+            aroundTheFieldEngageAndDisengage();
+        }
+
+
+        robot.tweetyBird.close();
+    }
+
+    /**
+     * Runs Selector for autonomous programs
+     */
+    public void autoSelector(){
+        //Add Programs to Selector
         autoPrograms.put(0, "Around the Field");
         autoPrograms.put(1, "Around the Field Engage/Disengage");
+
+        boolean debounce = false;
+        while(opModeInInit()) {
+            telemetry.addLine("Use A(Cross) to select next option\n" +
+                    "Use Y(Triangle) to lock in option\n" + autoPrograms.get(currentSelection) +
+                    "\ndebug: currentSelection = " + currentSelection);
+
+            if (gamepad1.a || gamepad2.a && !debounce) {
+                nextSelection();
+                debounce = true;
+            }
+            if (!gamepad1.a && !gamepad2.a && debounce) {
+                debounce = false;
+            }
+            if (gamepad1.y || gamepad2.y) {
+                break;
+            }
+            telemetry.addLine("\n\n\n" + runtime.toString());
+            telemetry.update();
+        }
+        telemetry.addLine("Running " + autoPrograms.get(currentSelection));
+        telemetry.update();
+    }
+
+    /**
+     * All of the Initializes steps put into a method
+     * Initializes robot, Tweetybird and runs Auto Selector
+     */
+    public void initialize(){
+        //Allows init telemetry to pile on DS
+        telemetry.setAutoClear(false);
+        boolean debounce = true; //For Selection
 
         robot = new TestConfiguration(this);
         robot.init();
         robot.initTweetyBird();
+        runtime = new ElapsedTime();
 
-        sleep(500); //Allow time to read init telemetry
-
-        while(opModeInInit()){
-            telemetry.addLine("Use X to select next option\n" +
-                    "Use A to lock in option\n" + autoPrograms.get(currentSelection) +
-                    "debug: currentSelection = " + currentSelection);
-            telemetry.update();
-
-            if(gamepad1.x || gamepad2.x && !debounce){
-                debounce = true;
-                nextSelection();
-            }
-            if(!gamepad1.x && !gamepad2.x && debounce){
-                debounce = false;
-            }
-            if(gamepad1.a){
-                break;
-            }
-        }
-
-        waitForStart();
-
-
-        //Clear and set auto clear for telemetry
-        telemetry.clearAll();
         telemetry.setAutoClear(true);
 
-
-        if(currentSelection == 0){
-            aroundTheFieldAuto();
-        }
-        if(currentSelection == 1){
-            aroundTheFieldEngageAndDisengage();
-        }
-
-        robot.tweetyBird.close();
+        telemetry.addLine("Initialization Successful!");
+        telemetry.update();
     }
+
 
     /**
      * Uses shared int currentSelection and Hashmap autoPrograms
      * to determine which way to increment currentSelection.
      */
     public void nextSelection(){
-        if(currentSelection < autoPrograms.size()){
-            currentSelection++;
+        //Increment
+        currentSelection++;
+        //If at last selection in list
+        if(currentSelection == autoPrograms.size()){
+            currentSelection = 0;
         }
-        else{
-            currentSelection--;
-        }
+    }
+
+    /**
+     * Return String 'Traveling to: X,Y,Z'
+     */
+    public String getWaypoint(){
+        return robot.tweetyBird.getCurrentWaypoint().getX() + "," +
+                robot.tweetyBird.getCurrentWaypoint().getY() + "," +
+                robot.tweetyBird.getCurrentWaypoint().getZ();
     }
 
     /**
@@ -91,16 +127,28 @@ public class Autonomous extends LinearOpMode {
         robot.tweetyBird.setMinSpeed(robot.minSpeed);
 
         robot.tweetyBird.addWaypoint(-24,24,0); //To bottom right corner of submersible
+        telemetry.addLine("Traveling to: " + getWaypoint());
+        telemetry.update();
         robot.tweetyBird.waitWhileBusy();
         robot.tweetyBird.addWaypoint(-24,96+6,0); //To upper right corner of submersible
+        telemetry.addLine("Traveling to: " + getWaypoint());
+        telemetry.update();
         robot.tweetyBird.waitWhileBusy();
         robot.tweetyBird.addWaypoint(-96-6,96+6,0); //To upper left corner of submersible
+        telemetry.addLine("Traveling to: " + getWaypoint());
+        telemetry.update();
         robot.tweetyBird.waitWhileBusy();
         robot.tweetyBird.addWaypoint(-96-6,24,0); //To bottom left corner of submersible
+        telemetry.addLine("Traveling to: " + getWaypoint());
+        telemetry.update();
         robot.tweetyBird.waitWhileBusy();
         robot.tweetyBird.addWaypoint(-24,24,0); //To bottom right corner of submersible
+        telemetry.addLine("Traveling to: " + getWaypoint());
+        telemetry.update();
         robot.tweetyBird.waitWhileBusy();
         robot.tweetyBird.addWaypoint(-12,12,0); //Go near Observation corner
+        telemetry.addLine("Traveling to: " + getWaypoint());
+        telemetry.update();
         robot.tweetyBird.waitWhileBusy();
 
         telemetry.addLine("aroundTheFieldAuto has finished");
