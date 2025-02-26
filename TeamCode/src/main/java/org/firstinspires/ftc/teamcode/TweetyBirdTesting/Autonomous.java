@@ -1,229 +1,131 @@
 package org.firstinspires.ftc.teamcode.TweetyBirdTesting;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import android.os.Environment;
 
-import java.util.*;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous")
 public class Autonomous extends LinearOpMode {
-    TestConfiguration robot;
-    int currentSelection = 0;
-    ElapsedTime runtime;
 
-    //Make a hashmap and grab value for key 1-2
-    //noinspection MismatchedQueryAndUpdateOfCollection
-    HashMap<Integer, String> autoPrograms = new HashMap<Integer, String>();
+    private static final Logger log = LoggerFactory.getLogger(Autonomous.class);
+    // Log file writer
+    protected BufferedWriter logWriter = null;
 
+    public LinearOpMode autoOpMode;
 
     @Override
     public void runOpMode(){
-        initialize();
-        autoSelector();
-
-        waitForStart();
-        telemetry.setAutoClear(true);
-
-        //Run auto based on selection
-        if(currentSelection == 0){
-            telemetry.addLine("Running selection 0");
-            telemetry.update();
-            aroundTheFieldAuto();
-        }
-        if(currentSelection == 1){
-            telemetry.addLine("Running selection 0");
-            telemetry.update();
-            aroundTheFieldEngageAndDisengage();
-        }
-
-
-        robot.tweetyBird.close();
-    }
-
-    /**
-     * Runs Selector for autonomous programs
-     */
-    public void autoSelector(){
-        //Add Programs to Selector
-        autoPrograms.put(0, "Around the Field");
-        autoPrograms.put(1, "Around the Field Engage/Disengage");
-
-        boolean debounce = false;
-        while(opModeInInit()) {
-            telemetry.addLine("Use A(Cross) to select next option\n" +
-                    "Use Y(Triangle) to lock in option\n" + autoPrograms.get(currentSelection) +
-                    "\ndebug: currentSelection = " + currentSelection);
-
-            if (gamepad1.a || gamepad2.a && !debounce) {
-                nextSelection();
-                debounce = true;
-            }
-            if (!gamepad1.a && !gamepad2.a && debounce) {
-                debounce = false;
-            }
-            if (gamepad1.y || gamepad2.y) {
-                break;
-            }
-            telemetry.addLine("\n\n\n" + runtime.toString());
-            telemetry.update();
-        }
-        telemetry.addLine("Running " + autoPrograms.get(currentSelection));
-        telemetry.update();
-    }
-
-    /**
-     * All of the Initializes steps put into a method
-     * Initializes robot, Tweetybird and runs Auto Selector
-     */
-    public void initialize(){
-        //Allows init telemetry to pile on DS
-        telemetry.setAutoClear(false);
-        boolean debounce = true; //For Selection
-
-        robot = new TestConfiguration(this);
+        TestConfiguration robot = new TestConfiguration(this);
         robot.init();
         robot.initTweetyBird();
-        runtime = new ElapsedTime();
 
-        telemetry.setAutoClear(true);
+        autoOpMode = this;
 
-        telemetry.addLine("Initialization Successful!");
-        telemetry.update();
-    }
+        waitForStart();
 
 
-    /**
-     * Uses shared int currentSelection and Hashmap autoPrograms
-     * to determine which way to increment currentSelection.
-     */
-    public void nextSelection(){
-        //Increment
-        currentSelection++;
-        //If at last selection in list
-        if(currentSelection == autoPrograms.size()){
-            currentSelection = 0;
+        while(opModeIsActive()) {
+
+            //Have TweetyBird run a simple path
+            //Have a button to disengage and reengage tweetybird
+            //Output when path started and when it ended ie:
+            //"(PathNum) X,Y,Z Start: runtime"
+            //"(PathNum) X,Y,Z End:   runtime"
+            //"(PathNum) Time to complete: start-end"
+            //"(DisengageNum) Disengaged!"
+            //"(EngageNum) Engaged!"
+            robot.tweetyBird.addWaypoint(10,0,0);
+            log("Moving to: 10,0,0");
+            while(robot.tweetyBird.isBusy() || !robot.tweetyBird.isEngaged()){
+                if(gamepad1.a){
+                    if(!robot.tweetyBird.isEngaged()){
+                        robot.tweetyBird.engage();
+                    }
+
+                }
+            }
+
+            robot.tweetyBird.addWaypoint(-10,0,0);
+            while(robot.tweetyBird.isBusy() || !robot.tweetyBird.isEngaged()){
+                if(gamepad1.a){
+                    if(!robot.tweetyBird.isEngaged()){
+                        robot.tweetyBird.engage();
+                    }
+
+                }
+            }
+
         }
+
+
+
+
     }
 
-    /**
-     * Return String 'Traveling to: X,Y,Z'
-     */
-    public String getWaypoint(){
-        return robot.tweetyBird.getCurrentWaypoint().getX() + "," +
-                robot.tweetyBird.getCurrentWaypoint().getY() + "," +
-                robot.tweetyBird.getCurrentWaypoint().getZ();
-    }
-
-    /**
-     * An Autonomous method that goes around the field.
-     * Starting Position is in the corner of Observation.
-     */
-    public void aroundTheFieldAuto(){
-        if(!robot.tweetyBird.isEngaged()){
-            robot.tweetyBird.engage();
+    // Setting up log file
+    public void setUpLog(){
+        // Setting up log file
+        String logFileName = "myLogFile.txt";
+        File logFile;
+        if (autoOpMode != null) {
+            File logDirectory = Environment.getExternalStorageDirectory();
+            logFile = new File(logDirectory, logFileName);
+        } else {
+            logFile = new File(logFileName);
         }
-        robot.tweetyBird.setMaxSpeed(robot.maxSpeed);
-        robot.tweetyBird.setMinSpeed(robot.minSpeed);
-
-        robot.tweetyBird.addWaypoint(-24,24,0); //To bottom right corner of submersible
-        telemetry.addLine("Traveling to: " + getWaypoint());
-        telemetry.update();
-        robot.tweetyBird.waitWhileBusy();
-        robot.tweetyBird.addWaypoint(-24,96+6,0); //To upper right corner of submersible
-        telemetry.addLine("Traveling to: " + getWaypoint());
-        telemetry.update();
-        robot.tweetyBird.waitWhileBusy();
-        robot.tweetyBird.addWaypoint(-96-6,96+6,0); //To upper left corner of submersible
-        telemetry.addLine("Traveling to: " + getWaypoint());
-        telemetry.update();
-        robot.tweetyBird.waitWhileBusy();
-        robot.tweetyBird.addWaypoint(-96-6,24,0); //To bottom left corner of submersible
-        telemetry.addLine("Traveling to: " + getWaypoint());
-        telemetry.update();
-        robot.tweetyBird.waitWhileBusy();
-        robot.tweetyBird.addWaypoint(-24,24,0); //To bottom right corner of submersible
-        telemetry.addLine("Traveling to: " + getWaypoint());
-        telemetry.update();
-        robot.tweetyBird.waitWhileBusy();
-        robot.tweetyBird.addWaypoint(-12,12,0); //Go near Observation corner
-        telemetry.addLine("Traveling to: " + getWaypoint());
-        telemetry.update();
-        robot.tweetyBird.waitWhileBusy();
-
-        telemetry.addLine("aroundTheFieldAuto has finished");
-        telemetry.update();
-
-    }
-
-    public void aroundTheFieldEngageAndDisengage(){
-        if(!robot.tweetyBird.isEngaged()){
-            robot.tweetyBird.engage();
+        try {
+            logWriter = new BufferedWriter(new FileWriter(logFile, true));
+        } catch (IOException e) {
+            log("Failed to initialize to logWriter "+e);
         }
-        robot.tweetyBird.setMaxSpeed(robot.maxSpeed);
-        robot.tweetyBird.setMinSpeed(robot.minSpeed);
 
-        robot.tweetyBird.addWaypoint(-24,24,0); //To bottom right corner of submersible
-        robot.tweetyBird.waitWhileBusy();
-        robot.tweetyBird.disengage();
-        setWheelPower(-.5,.5,.5,-.5);
-        sleep(500);
-        setWheelPower(0,0,0,0);
-
-        robot.tweetyBird.engage();
-        robot.tweetyBird.addWaypoint(-24,96+6,0); //To upper right corner of submersible
-        robot.tweetyBird.waitWhileBusy();
-        robot.tweetyBird.disengage();
-
-        setWheelPower(-.5,.5,.5,-.5);
-        sleep(500);
-        setWheelPower(0,0,0,0);
-
-        robot.tweetyBird.engage();
-        robot.tweetyBird.addWaypoint(-96-6,96+6,0); //To upper left corner of submersible
-        robot.tweetyBird.waitWhileBusy();
-        robot.tweetyBird.disengage();
-
-        setWheelPower(.5,-.5,-.5,.5);
-        sleep(500);
-        setWheelPower(0,0,0,0);
-
-        robot.tweetyBird.engage();
-        robot.tweetyBird.addWaypoint(-96-6,24,0); //To bottom left corner of submersible
-        robot.tweetyBird.waitWhileBusy();
-        robot.tweetyBird.disengage();
-
-        setWheelPower(.5,-.5,-.5,.5);
-        sleep(500);
-        setWheelPower(0,0,0,0);
-
-        robot.tweetyBird.engage();
-        robot.tweetyBird.addWaypoint(-24,24,0); //To bottom right corner of submersible
-        robot.tweetyBird.waitWhileBusy();
-        robot.tweetyBird.disengage();
-
-        setWheelPower(.5,-.5,-.5,.5);
-        sleep(500);
-        setWheelPower(0,0,0,0);
-
-        robot.tweetyBird.engage();
-        robot.tweetyBird.addWaypoint(-12,12,0); //Go near Observation corner
-        robot.tweetyBird.waitWhileBusy();
-
-        telemetry.addLine("aroundTheFieldAuto has finished");
-        telemetry.update();
-
+        // Done
+        log("Initial setup complete!\n");
     }
 
     /**
-     * Quick method allows easy setting of wheel power.
-     * Left: -1,1,1,-1
-     * Right: 1,-1,-1,1
+     * Internal method used to send debug messages
+     * @param message message to be sent
      */
-    public void setWheelPower(double fl, double fr, double bl, double br){
-        robot.fl.setPower(fl);
-        robot.fr.setPower(fr);
-        robot.bl.setPower(bl);
-        robot.br.setPower(br);
+    protected void log(String message) {
+        // Getting current time
+        Date now = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YYYY hh:mm:ss.SSS");
+        String date = sdf.format(now);
+
+        // Processing string
+        String outputString = "["+date+" MyLog]: "+message;
+
+        // Logfile
+        if (logWriter != null) {
+            try {
+                logWriter.write(outputString);
+                logWriter.newLine();
+            } catch (IOException e) {}
+        }
+
+    }
+
+    public void close() {
+        log("close called. Shutting down logWriter.");
+        try {
+            if (logWriter != null) {
+                logWriter.flush();
+                logWriter.close();
+            }
+        } catch (IOException e) {
+            log("Failed to shutdown logWriter");
+        }
     }
 }

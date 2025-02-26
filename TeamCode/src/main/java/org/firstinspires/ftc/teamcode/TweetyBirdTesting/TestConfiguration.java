@@ -23,8 +23,8 @@ public class TestConfiguration {
     public TweetyBird tweetyBird;
 
     ///Quick Change Values
-    public double maxSpeed = 0.5,
-                  minSpeed = 0.3;
+    public double maxSpeed = 0.4,
+                  minSpeed = 0.25;
 
 
     ///Robot Initialization Sequence
@@ -37,24 +37,28 @@ public class TestConfiguration {
         fl = hwMap.get(DcMotor.class, "FL");            //Name in DS
         fl.setDirection(DcMotor.Direction.REVERSE);                //Motor Direction
         fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);        //Reset the Encoder
+        fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         fl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);  //Set Brake Mode
 
         //Front Right Motor
         fr = hwMap.get(DcMotor.class, "FR");            //Name in DS
         fr.setDirection(DcMotorSimple.Direction.FORWARD);          //Motor Direction
         fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);        //Reset the Encoder
+        fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);  //Set Brake Mode
 
         //Back Left Motor
         bl = hwMap.get(DcMotor.class, "BL");            //Name in DS
         bl.setDirection(DcMotor.Direction.REVERSE);                //Motor Direction
         bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);        //Reset the Encoder
+        bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);  //Set Brake Mode
 
         //Back Right Motor
         br = hwMap.get(DcMotor.class, "BR");            //Name in DS
         br.setDirection(DcMotor.Direction.FORWARD);                //Motor Direction
         br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);        //Reset the Encoder
+        br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);  //Set Brake Mode
 
 
