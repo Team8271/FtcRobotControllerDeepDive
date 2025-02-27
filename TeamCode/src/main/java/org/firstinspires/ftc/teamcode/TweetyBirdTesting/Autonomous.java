@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TweetyBirdTesting;
 
 import android.os.Environment;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.slf4j.Logger;
@@ -14,7 +15,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
+@Disabled
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous")
 public class Autonomous extends LinearOpMode {
 
